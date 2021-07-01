@@ -79,7 +79,7 @@ salem_trak %>%
   labs(
     x = NULL, y = "Number of traffic accidents per week",
     color = "CASES"
-  ) + theme_minimal()
+  ) + theme_minimal()  + theme(plot.title = element_text(hjust = 0.5),text = element_text( size = 12, family = "Open Sans"))
 
 '-----------------------------------------------------------------------------------'
 'How have the number of accidents changed over time? (in months)'
@@ -101,7 +101,7 @@ salem_trak %>%
   labs(
     x = NULL, y = "Number of traffic accidents per month",
     color = "CASES"
-  ) + theme_minimal()
+  ) + theme_minimal()  + theme(plot.title = element_text(hjust = 0.5),text = element_text( size = 12, family = "Open Sans"))
 
 
 '--------------------------------------------------------------------------------------------------'
@@ -126,8 +126,8 @@ salem_trak %>%
   ggplot(aes(NEW_DATE, percent_injury)) +
   geom_line(size = 1.5, alpha = 0.7, color = "midnightblue") +
   scale_y_continuous(limits = c(0, NA), labels = scales::percent_format()) +
-  labs(x = NULL, y = "% of accidents that involve death")
-
+  labs(x = NULL, y = "% of accidents that involve death") + 
+theme_minimal() + theme(plot.title = element_text(hjust = 0.5),text = element_text( size = 12, family = "Open Sans"))
 
 library(ggplot2)
 
