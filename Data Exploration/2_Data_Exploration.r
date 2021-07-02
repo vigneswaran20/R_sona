@@ -104,6 +104,8 @@ salem_trak %>%
 
 #Gender with the highest accidents (injuries + fatality)?
 
+#Age group with highest accidents (injuries + fatality)?
+
 #How have the number of accidents changed over seasons? (Spring , Autumn , Summer, Winter)
 
 #Which place records highest accidents , fatality , injuries?
