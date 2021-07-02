@@ -74,7 +74,7 @@ theme_minimal() + theme(plot.title = element_text(hjust = 0.5),text = element_te
 
 ##------------------------------------------------------------------------------------------------------------------------------------------------------
 
-#How does the injury rate change through the week?
+#The day in the week with the highest falaity rate/ injury rate?
 
 salem_trak %>%
   mutate(NEW_DATE = wday(NEW_DATE, label = TRUE)) %>%
