@@ -260,35 +260,41 @@ salem_trak %>%
 
 
 '-----------------------------------------------------------------------------------------------'
-#Gender with the highest fatality rate ? 
+#Gender Gap ? 
 
 
-salem_formatted <-  salem_trak %>%
-  mutate(NEW_DATE = floor_date(NEW_DATE, unit = "week")) %>%
-  filter(
-    GENDER != "N"
-  ) %>% 
-  mutate(CASES = fct_collapse(CASES, Fatal = c("Fatal","Fatal and accidental fire","Fatal.","Fatals"),
+salem_manipulated <- salem_trak %>%
+  mutate(NEW_DATE = wday(NEW_DATE, label = TRUE)) %>%
+  mutate(CASES = fct_collapse(CASES, Accident = c("Grivious Injury","Minor injury", "Minor Injury", "No injury", "Non Injury" ,"Grivious injury", "Grivious injury.","Grivious injury @ Fatal",
+                                                  "Grivious injury","Low injury","Low injury and sec 185 MV Act",
+                                                  "Medium injury","Medium injury @ Low injury","Medium injury and 185 MVI Act",
+                                                  "Medium injury`","Fatal","Fatal and accidental fire","Fatal.","Fatals")
                               
-                              Injury = c("Grivious Injury","Minor injury", "Minor Injury", "No injury", "Non Injury" ,"Grivious injury", "Grivious injury.","Grivious injury @ Fatal",
-                                         "Grivious injury","Low injury","Low injury and sec 185 MV Act",
-                                         "Medium injury","Medium injury @ Low injury","Medium injury and 185 MVI Act","Medium injury`"))) 
+  )) %>%  filter(
+    GENDER != "N"
+  )  %>% count(GENDER)
+salem_manipulated
 
-salem_formatted %>%  filter(
-  GENDER != "N"
-) %>% count(CASES) 
+ggplot(salem_manipulated, aes(x=GENDER, y=n)) + 
+  geom_bar(stat = "identity", width=0.2, alpha = 0.4, fill="red") + theme_minimal() + labs(x = "GENDER", y = "NUMBER OF CASES") + ggtitle("GENDER GAP") + theme(plot.title = element_text(hjust = 0.5),text = element_text( size = 18, family = "Open Sans"))
 
-salem_formatted %>%  filter(
-  GENDER != "N"
-) %>% count(GENDER) 
-
-skimr::skim(salem_formatted)
-plot_bar(salem_formatted, ggtheme = theme_minimal(base_size = 20))
-
-##PENDING...
 '------------------------------------------------------------------------------'
+#Injuries vs Fatality?
 
-#Gender with the highest accidents (injuries + fatality)?
+
+salem_manipulated <- salem_trak %>%
+  mutate(NEW_DATE = wday(NEW_DATE, label = TRUE)) %>%
+  mutate(CASES = fct_collapse(CASES, Injury = c("Grivious Injury","Minor injury", "Minor Injury", "No injury", "Non Injury" ,"Grivious injury", "Grivious injury.","Grivious injury @ Fatal",
+                                                "Grivious injury","Low injury","Low injury and sec 185 MV Act",
+                                                "Medium injury","Medium injury @ Low injury","Medium injury and 185 MVI Act",
+                                                "Medium injury`"),  Fatal = c("Fatal","Fatal and accidental fire","Fatal.","Fatals")
+                              
+  )) %>%  count(CASES)
+salem_manipulated
+
+ggplot(salem_manipulated, aes(x=CASES, y=n)) + 
+  geom_bar(stat = "identity", width=0.2, alpha = 0.4, fill="red") + theme_minimal() + labs(x = "CASE TYPES", y = "NUMBER OF CASES") + ggtitle("FATAL vs INJURY") + theme(plot.title = element_text(hjust = 0.5),text = element_text( size = 18, family = "Open Sans"))
+'---------------------------------------------------------------------------'
 
 #Age group with highest accidents (injuries + fatality)?
 
