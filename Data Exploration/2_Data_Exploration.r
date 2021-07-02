@@ -1,3 +1,36 @@
+library(tidyverse)
+library(readxl)
+library(lubridate)
+library(RSocrata)
+salem_accidents <- excel_sheets("E:\\CopyOFnew.xlsx") %>% map_df(~read_xlsx("E:\\CopyOFnew.xlsx",.))
+skimr::skim(salem_accidents)
+str(salem_accidents)
+
+
+'----------------------------------------------------------------------------------------------'
+library(tidyverse)
+library(lubridate)
+library(RSocrata)
+
+salem_acc_report <- salem_accidents
+str(salem_acc_report)
+salem_acc_report
+skimr::skim(salem_acc_report)
+
+
+##ignore the missing data
+
+salem_acc <- salem_acc_report %>%
+  filter( !is.na(GENDER), !is.na(CASES), !is.na(NEW_DATE))  %>%
+  select(AGE, GENDER,CASES, NEW_DATE) %>% 
+  mutate_if(is.character, factor)
+ 
+
+salem_acc
+skimr::skim(salem_acc)
+
+
+'------------------------------------------------------------------------'
 
 'How have the number of accidents changed over time? (in weeks)'
 
@@ -64,7 +97,7 @@ salem_trak %>%
   labs(
     x = NULL, y = "Number of traffic accidents per month",
     color = "CASES"
-  ) + theme_minimal()  + theme(plot.title = element_text(hjust = 0.5),text = element_text( size = 12, family = "Open Sans"))
+  ) + theme_minimal()  + theme(plot.title = element_text(hjust = 0.5),text = element_text( size = 18, family = "Open Sans"))
 
 
 '--------------------------------------------------------------------------------------------------'
@@ -90,7 +123,7 @@ salem_trak %>%
   geom_line(size = 1.5, alpha = 0.7, color = "midnightblue") +
   scale_y_continuous(limits = c(0, NA), labels = scales::percent_format()) +
   labs(x = NULL, y = "% of accidents that involve death") + 
-theme_minimal() + theme(plot.title = element_text(hjust = 0.5),text = element_text( size = 12, family = "Open Sans"))
+theme_minimal() + theme(plot.title = element_text(hjust = 0.5),text = element_text( size = 18, family = "Open Sans"))
 
 library(ggplot2)
 
@@ -179,7 +212,7 @@ library(extrafont)
 loadfonts(device = "win")
 
 
-library("knitr")
+
 salem_trak %>%
   mutate(NEW_DATE = wday(NEW_DATE, label = TRUE)) %>%
   mutate(CASES = fct_collapse(CASES, Accident = c("Grivious Injury","Minor injury", "Minor Injury", "No injury", "Non Injury" ,"Grivious injury", "Grivious injury.","Grivious injury @ Fatal",
@@ -198,7 +231,7 @@ salem_trak %>%
   )
 
 
-
+library("knitr")
 
 
 
@@ -227,14 +260,33 @@ salem_trak %>%
 
 
 '-----------------------------------------------------------------------------------------------'
-
-#The day in the week with the highest falaity rate/ injury rate? (Finished)
-#How has the death rate changed over time? (in months) (Finished)
-#How has the accident rate changed over time?   (Finished)
-#The day in the week with the highest falaity rate/ injury rate? (Finished)
-#How have the number of accidents changed over time? (in weeks) (in months)  (Finished)
-
 #Gender with the highest fatality rate ? 
+
+
+salem_formatted <-  salem_trak %>%
+  mutate(NEW_DATE = floor_date(NEW_DATE, unit = "week")) %>%
+  filter(
+    GENDER != "N"
+  ) %>% 
+  mutate(CASES = fct_collapse(CASES, Fatal = c("Fatal","Fatal and accidental fire","Fatal.","Fatals"),
+                              
+                              Injury = c("Grivious Injury","Minor injury", "Minor Injury", "No injury", "Non Injury" ,"Grivious injury", "Grivious injury.","Grivious injury @ Fatal",
+                                         "Grivious injury","Low injury","Low injury and sec 185 MV Act",
+                                         "Medium injury","Medium injury @ Low injury","Medium injury and 185 MVI Act","Medium injury`"))) 
+
+salem_formatted %>%  filter(
+  GENDER != "N"
+) %>% count(CASES) 
+
+salem_formatted %>%  filter(
+  GENDER != "N"
+) %>% count(GENDER) 
+
+skimr::skim(salem_formatted)
+plot_bar(salem_formatted, ggtheme = theme_minimal(base_size = 20))
+
+##PENDING...
+'------------------------------------------------------------------------------'
 
 #Gender with the highest accidents (injuries + fatality)?
 
@@ -244,6 +296,6 @@ salem_trak %>%
 
 #Which place records highest accidents , fatality , injuries? (Only the station info is given you have to find the location of the station and record in the place column)
 
-#How have the accidents with repsect to places changes over years?
+#How have the accidents with respect to places changes over years?
 
 #The station that filed more accident?
