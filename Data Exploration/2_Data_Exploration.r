@@ -305,3 +305,7 @@ ggplot(salem_manipulated, aes(x=CASES, y=n)) +
 #How have the accidents with respect to places changes over years?
 
 #The station that filed more accident?
+
+#Time -> morning , evening , office hour
+
+
