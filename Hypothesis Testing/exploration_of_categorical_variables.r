@@ -1,4 +1,3 @@
-#Yet to do
 'Exploring categorical variables with Fischers and chi-square test'
 
 library("tidyverse")
@@ -34,11 +33,11 @@ salem_trak = salem_acc %>% arrange(desc(NEW_DATE)) %>% na.omit()
 salem_trak
 
 
-##Exploration
+##Categorical variable exploration
 
 salem_formatted <-  salem_trak %>%
   mutate(NEW_DATE = floor_date(NEW_DATE, unit = "week")) %>%
- filter(
+  filter(
     GENDER != "N"
   ) %>% 
   mutate(CASES = fct_collapse(CASES, Fatal = c("Fatal","Fatal and accidental fire","Fatal.","Fatals"),
@@ -51,5 +50,12 @@ salem_formatted %>%  filter(
   GENDER != "N"
 ) %>% count(CASES) 
 
+salem_formatted %>%  filter(
+  GENDER != "N"
+) %>% count(GENDER) 
+
 skimr::skim(salem_formatted)
 plot_bar(salem_formatted, ggtheme = theme_minimal(base_size = 20))
+
+'------------------------------------------------------------------------------'
+
