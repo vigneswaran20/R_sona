@@ -195,7 +195,7 @@ salem_trak %>%
   group_by(CASES) %>%
   mutate(percent = n / sum(n)) %>%
   ungroup() %>%
-  filter(CASES == "Injury") %>%
+  filter(CASES == "Fatal") %>%
   ggplot(aes(percent, NEW_DATE, fill = CASES)) +
   geom_col(position = "dodge", alpha = 0.8, fill="red") +
   scale_x_continuous(labels = scales::percent_format()) +
@@ -296,6 +296,14 @@ ggplot(salem_manipulated, aes(x=CASES, y=n)) +
   geom_bar(stat = "identity", width=0.2, alpha = 0.4, fill="red") + theme_minimal() + labs(x = "CASE TYPES", y = "NUMBER OF CASES") + ggtitle("FATAL vs INJURY") + theme(plot.title = element_text(hjust = 0.5),text = element_text( size = 18, family = "Open Sans"))
 '---------------------------------------------------------------------------'
 
+
+
+
+
+
+
+#Gender with the highest fatality?
+
 #Age group with highest accidents (injuries + fatality)?
 
 #How have the number of accidents changed over seasons? (Spring , Autumn , Summer, Winter)
@@ -305,7 +313,3 @@ ggplot(salem_manipulated, aes(x=CASES, y=n)) +
 #How have the accidents with respect to places changes over years?
 
 #The station that filed more accident?
-
-#Time -> morning , evening , office hour
-
-
