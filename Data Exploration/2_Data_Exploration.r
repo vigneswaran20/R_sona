@@ -99,6 +99,11 @@ salem_trak %>%
  theme_minimal() + theme(plot.title = element_text(hjust = 0.5),text = element_text( size = 12, family = "Open Sans"))
 
 ##-------------------------------------------------------------------------------------------------------------------------------------------------
+#The day in the week with the highest falaity rate/ injury rate? (Finished)
+ #How has the death rate changed over time? (in months) (Finished)
+ #How has the accident rate changed over time?   (Finished)
+#The day in the week with the highest falaity rate/ injury rate? (Finished)
+#How have the number of accidents changed over time? (in weeks) (in months)  (Finished)
 
 #Gender with the highest fatality rate ? 
 
@@ -108,7 +113,7 @@ salem_trak %>%
 
 #How have the number of accidents changed over seasons? (Spring , Autumn , Summer, Winter)
 
-#Which place records highest accidents , fatality , injuries?
+#Which place records highest accidents , fatality , injuries? (Only the station info is given you have to find the location of the station and record in the place column)
 
 #How have the accidents with repsect to places changes over years?
 
