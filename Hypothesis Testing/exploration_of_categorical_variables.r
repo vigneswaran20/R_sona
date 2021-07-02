@@ -72,3 +72,7 @@ ExpCatViz(salem_formatted %>% select(CASES, GENDER), target = "CASES", col=c("sl
 
 plot4 <- ExpNumViz(salem_formatted,target="CASES",col=c("darkgreen","springgreen3","springgreen1"))
 plot4[[1]]
+'-------------------------------------------------------'
+
+library(ggstatsplot)
+ggbarstats(data = salem_formatted, x = CASES, y = GENDER, label = "both")
