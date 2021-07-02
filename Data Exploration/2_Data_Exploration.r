@@ -1,7 +1,27 @@
 
-#How have the number of accidents changed over time? (in weeks) ------------------------------------------->  1
+'How have the number of accidents changed over time? (in weeks)'
 
 salem_trak = salem_acc %>% arrange(desc(NEW_DATE)) %>% na.omit()
+salem_trak
+
+
+
+
+salem_trak %>%
+  mutate(NEW_DATE = floor_date(NEW_DATE, unit = "week")) %>%
+  mutate(CASES = fct_collapse(CASES, Fatal = c("Fatal","Fatal and accidental fire","Fatal.","Fatals"),
+                              
+                              Injury = c("Grivious Injury","Minor injury", "Minor Injury", "No injury", "Non Injury" ,"Grivious injury", "Grivious injury.","Grivious injury @ Fatal",
+                                         "Grivious injury","Low injury","Low injury and sec 185 MV Act",
+                                         "Medium injury","Medium injury @ Low injury","Medium injury and 185 MVI Act","Medium injury`"))) %>%
+  count(NEW_DATE, CASES)
+
+
+
+
+
+
+
 
 
 salem_trak %>%
@@ -23,10 +43,9 @@ salem_trak %>%
     x = NULL, y = "Number of traffic accidents per week",
     color = "CASES"
   ) + theme_minimal()  + theme(plot.title = element_text(hjust = 0.5),text = element_text( size = 12, family = "Open Sans"))
-  
-  ##------------------------------------------------------------------------------------------------------------------------------------------------------------------
-  
-  #How have the number of accidents changed over time? (in months)
+
+'-----------------------------------------------------------------------------------'
+'How have the number of accidents changed over time? (in months)'
 salem_trak %>%
   mutate(NEW_DATE = floor_date(NEW_DATE, unit = "month")) %>%
   mutate(CASES = fct_collapse(CASES, Fatal = c("Fatal","Fatal and accidental fire","Fatal.","Fatals"),
@@ -46,11 +65,12 @@ salem_trak %>%
     x = NULL, y = "Number of traffic accidents per month",
     color = "CASES"
   ) + theme_minimal()  + theme(plot.title = element_text(hjust = 0.5),text = element_text( size = 12, family = "Open Sans"))
-  
-  ##----------------------------------------------------------------------------------------------------------------------------------------------------
-  #How has the death rate changed over time? (in months)
-  
-  salem_trak %>%
+
+
+'--------------------------------------------------------------------------------------------------'
+'How has the injury rate changed over time?'
+
+salem_trak %>%
   mutate(NEW_DATE = floor_date(NEW_DATE, unit = "month")) %>%
   mutate(CASES = fct_collapse(CASES, Fatal = c("Fatal","Fatal and accidental fire","Fatal.","Fatals"),
                               
@@ -72,9 +92,39 @@ salem_trak %>%
   labs(x = NULL, y = "% of accidents that involve death") + 
 theme_minimal() + theme(plot.title = element_text(hjust = 0.5),text = element_text( size = 12, family = "Open Sans"))
 
-##------------------------------------------------------------------------------------------------------------------------------------------------------
+library(ggplot2)
 
-#The day in the week with the highest falaity rate/ injury rate?
+library(tidyverse)
+install.packages("percent_format")
+str(CopyOFnew2)
+
+tail(salem_trak)
+
+
+'----------------------------------------------------------------'
+
+
+
+salem_trak %>%
+  mutate(NEW_DATE = wday(NEW_DATE, label = TRUE)) %>%
+  mutate(CASES = fct_collapse(CASES,  Fatal = c("Fatal","Fatal and accidental fire","Fatal.","Fatals")
+                              
+  )) %>%
+  
+  count(NEW_DATE, CASES)  %>%
+  filter(CASES == "Fatal") %>%
+  group_by(CASES) %>%
+  mutate(percent = scales::percent(n / sum(n))) %>%
+  kable(
+    col.names = c("Day", "Cases", "Number of people", "percentage"),
+    align = "llrr"
+  )
+
+'-----------------------------------------------------------------------'
+
+
+'How does the cases rate change through the week?'
+
 
 salem_trak %>%
   mutate(NEW_DATE = wday(NEW_DATE, label = TRUE)) %>%
@@ -88,20 +138,99 @@ salem_trak %>%
   group_by(CASES) %>%
   mutate(percent = n / sum(n)) %>%
   ungroup() %>%
+  ggplot(aes(percent, NEW_DATE, fill = CASES)) +
+  geom_col(position = "dodge", alpha = 0.8) +
+  scale_x_continuous(labels = scales::percent_format()) +
+  labs(x = "% of Cases", y = NULL, fill = "Cases") + ggtitle("Case Rate") +
+  
+  scale_fill_brewer(palette="Paired") +
+ 
+ theme_minimal() + theme(plot.title = element_text(hjust = 0.5),text = element_text( size = 18, family = "Open Sans"))
+
+'--------------------------------------------------------------------'
+'How does the fatal rate change through the week?'
+
+salem_trak %>%
+  mutate(NEW_DATE = wday(NEW_DATE, label = TRUE)) %>%
+  mutate(CASES = fct_collapse(CASES, Injury = c("Grivious Injury","Minor injury", "Minor Injury", "No injury", "Non Injury" ,"Grivious injury", "Grivious injury.","Grivious injury @ Fatal",
+                                                "Grivious injury","Low injury","Low injury and sec 185 MV Act",
+                                                "Medium injury","Medium injury @ Low injury","Medium injury and 185 MVI Act",
+                                                "Medium injury`"),  Fatal = c("Fatal","Fatal and accidental fire","Fatal.","Fatals")
+                              
+  )) %>%
+  count(NEW_DATE, CASES) %>%
+  group_by(CASES) %>%
+  mutate(percent = n / sum(n)) %>%
+  ungroup() %>%
   filter(CASES == "Injury") %>%
   ggplot(aes(percent, NEW_DATE, fill = CASES)) +
-  geom_col(position = "dodge", alpha = 0.8, fill="steelblue") +
+  geom_col(position = "dodge", alpha = 0.8, fill="red") +
   scale_x_continuous(labels = scales::percent_format()) +
   labs(x = "% of Accidents", y = NULL, fill = "Cases") + ggtitle("Fatality Rate") +
   
   ##scale_fill_brewer(palette="Paired") +
- 
- theme_minimal() + theme(plot.title = element_text(hjust = 0.5),text = element_text( size = 12, family = "Open Sans"))
+  
+  theme_minimal() + theme(plot.title = element_text(hjust = 0.5),text = element_text( size = 12, family = "Open Sans"))
 
-##-------------------------------------------------------------------------------------------------------------------------------------------------
+'--------------------------------------------------------------------'
+'How does the accident rate change through the week?'
+
+library(extrafont)
+loadfonts(device = "win")
+
+
+library("knitr")
+salem_trak %>%
+  mutate(NEW_DATE = wday(NEW_DATE, label = TRUE)) %>%
+  mutate(CASES = fct_collapse(CASES, Accident = c("Grivious Injury","Minor injury", "Minor Injury", "No injury", "Non Injury" ,"Grivious injury", "Grivious injury.","Grivious injury @ Fatal",
+                                                  "Grivious injury","Low injury","Low injury and sec 185 MV Act",
+                                                  "Medium injury","Medium injury @ Low injury","Medium injury and 185 MVI Act",
+                                                  "Medium injury`","Fatal","Fatal and accidental fire","Fatal.","Fatals")
+                              
+  )) %>%
+  
+  count(NEW_DATE, CASES)  %>%
+  group_by(CASES) %>%
+  mutate(percent = scales::percent(n / sum(n))) %>%
+  kable(
+    col.names = c("Day", "Cases", "Number of people", "percentage"),
+    align = "llrr"
+  )
+
+
+
+
+
+
+
+
+salem_trak %>%
+  mutate(NEW_DATE = wday(NEW_DATE, label = TRUE)) %>%
+  mutate(CASES = fct_collapse(CASES, Accident = c("Grivious Injury","Minor injury", "Minor Injury", "No injury", "Non Injury" ,"Grivious injury", "Grivious injury.","Grivious injury @ Fatal",
+                                                  "Grivious injury","Low injury","Low injury and sec 185 MV Act",
+                                                  "Medium injury","Medium injury @ Low injury","Medium injury and 185 MVI Act",
+                                                  "Medium injury`","Fatal","Fatal and accidental fire","Fatal.","Fatals")
+                              
+  )) %>%
+  count(NEW_DATE, CASES) %>%
+  group_by(CASES) %>%
+  mutate(percent = n / sum(n)) %>%
+  ungroup() %>%
+  ggplot(aes(percent, NEW_DATE, fill = CASES)) +
+  geom_col(position = "dodge", alpha = 0.8, fill="steelblue") +
+  scale_x_continuous(labels = scales::percent_format()) +
+  labs(x = "% of Accidents", y = NULL, fill = "Cases") + ggtitle("Accident Rate") +
+  
+  ##scale_fill_brewer(palette="Paired") +
+  
+  theme_minimal() + theme(plot.title = element_text(hjust = 0.5),text = element_text( size = 18, family = "Open Sans"))
+
+
+'-----------------------------------------------------------------------------------------------'
+
 #The day in the week with the highest falaity rate/ injury rate? (Finished)
- #How has the death rate changed over time? (in months) (Finished)
- #How has the accident rate changed over time?   (Finished)
+#How has the death rate changed over time? (in months) (Finished)
+#How has the accident rate changed over time?   (Finished)
 #The day in the week with the highest falaity rate/ injury rate? (Finished)
 #How have the number of accidents changed over time? (in weeks) (in months)  (Finished)
 
@@ -118,5 +247,3 @@ salem_trak %>%
 #How have the accidents with repsect to places changes over years?
 
 #The station that filed more accident?
-
-
