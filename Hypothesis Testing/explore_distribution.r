@@ -1,4 +1,3 @@
-'Exploring distribution with skewness and kurtosis test'
 'Why do we need to explore the distribution :-
 
 Well, many statistical test actually depend on symmetric and normally distributed data.
@@ -84,3 +83,15 @@ skewness(salem_formatted$AGE, na.rm = TRUE)
 'Here value is 0.1819392'
 
 'If +1 it is far away from the zero'
+
+
+'How far is far enough?'
+
+agostino.test(salem_formatted$AGE)
+'It gives p-value and we can check with that'
+
+'Kurtosis is the measure of heavy tails or outliers present in the distribution'
+
+#Kurtosis
+anscombe.test(salem_formatted$AGE)
+'based on the kurt value we can say whether the distribution is fine or not'
