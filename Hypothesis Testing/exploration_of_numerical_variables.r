@@ -1,5 +1,4 @@
-#Yet to do
-'Exploring categorical variables with Fischers and chi-square test'
+'Exploring numerical variables'
 
 library("tidyverse")
 library("DataExplorer")
@@ -15,7 +14,10 @@ str(salem_accidents)
 
 '----------------------------------------------------------------------------------------------'
 
+salem_accidents %>% diagnose_numeric() %>% flextable()
 
+
+'--------------------------------------------------------'
 
 
 
@@ -40,12 +42,47 @@ salem_trak = salem_acc %>% arrange(desc(NEW_DATE)) %>% na.omit()
 salem_trak
 
 
+'-----------------------------------------------'
+salem_formatted <-  salem_trak %>%
+  mutate(NEW_DATE = floor_date(NEW_DATE, unit = "week")) %>%
+  filter(
+    GENDER != "N"
+  ) %>% 
+  mutate(CASES = fct_collapse(CASES, Fatal = c("Fatal","Fatal and accidental fire","Fatal.","Fatals"),
+                              
+                              Injury = c("Grivious Injury","Minor injury", "Minor Injury", "No injury", "Non Injury" ,"Grivious injury", "Grivious injury.","Grivious injury @ Fatal",
+                                         "Grivious injury","Low injury","Low injury and sec 185 MV Act",
+                                         "Medium injury","Medium injury @ Low injury","Medium injury and 185 MVI Act","Medium injury`"))) 
 
+
+'------------------------------------------------'
 
 install.packages("dlookr")
 install.packages("flextable")
 library(flextable)
 library(dlookr)
+'-------------------------------------------------'
+'dlookr'
+
+dlookr::describe(salem_formatted) %>% flextable()
+
+'-----------------------------------------------------'
+'With tidyverse packages'
+
+salem_formatted %>% diagnose_numeric() %>% flextable()
+
+salem_formatted %>% group_by(CASES) %>% univar_numeric()
+
+'--------------------------------------------------------'
+library(SmartEDA)
+
+ExpNumStat(salem_formatted, by="G",gp="CASES", round = 2) %>% flextable()
+
+ExpNumStat(salem_formatted, by="GA", gp="CASES", Outlier = TRUE, Qnt = c(.25,.75), round = 2) %>% flextable()
 
 
-dlookr::describe(salem_trak) %>% flextable()
+'--------------------------------------------------------------'
+
+library(summarytools)
+install.packages("summarytool")
+dfSummary(salem_formatted)
