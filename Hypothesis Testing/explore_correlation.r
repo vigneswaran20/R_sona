@@ -23,3 +23,16 @@ library(fastStat)
 
 
 iris %>% select_if(is.numeric) %>% cor_sig_star(method = "kendall")
+
+
+
+#dlookr
+
+bla <- compare_numeric(iris)
+
+bla$correlation
+
+bla$linear %>% mutate_if(is.numeric, ~round(.,2)) %>% flextable()
+
+plot(bla)
+
