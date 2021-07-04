@@ -17,3 +17,9 @@ data = airquality,
 
 
 chart.Correlation(iris %>% select(-Species), method= "kendall")
+
+
+library(fastStat)
+
+
+iris %>% select_if(is.numeric) %>% cor_sig_star(method = "kendall")
