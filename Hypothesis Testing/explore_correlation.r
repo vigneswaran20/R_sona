@@ -14,3 +14,6 @@ data = airquality,
   y = Temp,
   type = "np"
 )
+
+
+chart.Correlation(iris %>% select(-Species), method= "kendall")
