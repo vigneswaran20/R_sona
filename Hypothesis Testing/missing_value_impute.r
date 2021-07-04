@@ -1,0 +1,1 @@
+plot_na_intersect(salem_acc_report)
