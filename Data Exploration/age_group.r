@@ -52,9 +52,9 @@ salem_trak %>%
                                          
 
 
-salem_trak_change <- salem_trak %>% mutate() %>% mutate(AGE = as.numeric(AGE))
+salem_trak_change_new <- salem_trak %>% mutate() %>% mutate(AGE = as.numeric(AGE))
 str(salem_trak_change)
-salem_trak_change %>% mutate() %>% mutate(AGE = as.numeric(AGE)) %>%
+salem_trak_change_new <- salem_trak_change %>% mutate() %>% mutate(AGE = as.numeric(AGE)) %>%
   mutate(
     # Create categories
     age_group = dplyr::case_when(
@@ -69,3 +69,45 @@ salem_trak_change %>% mutate() %>% mutate(AGE = as.numeric(AGE)) %>%
       level = c("0-14", "15-44","45-64", "> 64")
     )
   )
+
+salem_trak_change_new
+
+salem_term <- salem_trak_change_new %>%  filter(
+  GENDER != "N"
+)  %>% count(age_group, GENDER)
+
+
+
+
+salem_term
+
+install.packages("lemon")
+
+library(ggplot2)
+library(lemon)
+
+salem_term
+
+ggplot(data = salem_term, 
+       mapping = aes(x = ifelse(test = GENDER == "M", yes = -n, no = n), 
+                     y = age_group, fill = GENDER, label=paste(round(n*100/sum(n), 0), "%", sep=""))) +
+  geom_col() +
+  geom_text(hjust=ifelse(test = salem_term$GENDER == "M",  yes = 1.1, no = -0.1), size=6, colour="#505050") + 
+ 
+  labs(x = "Population") +
+  scale_fill_manual(values=as.vector(c("#d23f67","#505050"))) +
+  # Remove the axis labels and the fill label from the legend - these are unnecessary for a Population Pyramid
+  labs(
+    x = "",
+    y = "",
+    fill=""
+  ) + theme_minimal() + 
+theme( 
+  panel.grid.major = element_blank(), 
+  panel.grid.minor = element_blank(),
+  axis.text.x=element_blank(), 
+  legend.position="bottom",
+  legend.text=element_text(size=20)
+)+ theme(plot.title = element_text(hjust = 0.5),text = element_text( size = 18, family = "Open Sans"))
+
+
